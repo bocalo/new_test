@@ -10,12 +10,16 @@ month = gets.chomp.to_i
 puts "Какой год?"
 year = gets.chomp.to_i
 
-for i in 0..month - 2
-    res += months_days[i]
-end
-
-if ((year % 400 == 0) && (year % 100 == 0)) || (year % 4 == 0)
+if year % 400 == 0 || (year % 4 == 0 && year % 100 != 0)
   months_days[1] += 1
 end
+
+res += months_days.take(month - 1).sum 
+
+# for i in 0..month - 2
+#     res += months_days[i]
+# end
+
+
 puts "Порядковый номер дня: #{res}"
 

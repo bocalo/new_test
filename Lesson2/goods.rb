@@ -23,3 +23,4 @@ basket.each do |item, price|
 end
 
 puts "Общая сумма покупок: #{total}"
+
