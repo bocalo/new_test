@@ -12,6 +12,8 @@ puts arr
 
 
 
+
+
 # arr = (10..100).to_a
 # new_arr = []
 # i = 0
