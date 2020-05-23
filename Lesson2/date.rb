@@ -11,7 +11,7 @@ puts "Какой год?"
 year = gets.chomp.to_i
 
 if year % 400 == 0 || (year % 4 == 0 && year % 100 != 0)
-    months_days[1] += 1
+  months_days[1] += 1
 end
 
 res += months_days.take(month - 1).sum 

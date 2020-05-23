@@ -14,6 +14,6 @@ months = {
 }
 
 months.each do |month, val|
-   puts "#{month}" if months[month] == 30 
+  puts "#{month}" if months[month] == 30 
 end
 
