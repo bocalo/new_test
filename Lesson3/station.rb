@@ -1,7 +1,4 @@
-# Сам сделать не смог, списал чужой код, но даже в нем 
-# до конца не разобрался. 
-
-
+ 
 class Station
   attr_reader :name, :trains
 
@@ -18,15 +15,9 @@ class Station
     self.trains.delete(train)
   end
 
-  def type_trains(car)
-    @trains.count { |train| train.type == car.to_sym }
+  def type_trains(type)
+    @trains.count { |train| train.type == type.to_sym }
   end
-  # Не смог проверить в irb -- type_trains. Вводил в car и символ, и цифру,
-
-  # и строку, ответ один: 
-  # NameError (undefined local variable or method `car' for main:Object)
-  #
-  #
 end
 
 class Route
@@ -52,96 +43,78 @@ class Route
 end
 
 class Train
-  attr_reader :current_speed, :number, :type, :route, :station, :cars
+  attr_reader :speed, :wagons, :type
 
-  #TYPE = [:passenger, :cargo]
-
-  def initialize(number, type, cars)
+  def initialize(number, type, wagons)
     @number = number
     @type = type.to_sym
-    @cars = cars
-    @current_speed = 0
-    @route_index = 0
+    @wagons = wagons
+    @speed = 0
+    @route = nil
+    @station_index = nil
   end
 
-  def set_route(route)
-    unless @route.nil?
-      current_station.remove_train(self)
-    end
-    @route_index = 0
-    @route = route
+  def set_route(r)
+    @station_index = 0
+    @route = r
     current_station.add_train(self)
   end
 
-  # У меня вопрос по add_train(self) и remove_train(self)
-  # Пока есть маршрут текущая станция принимает или отправляет список вагонов,
-  # т.е. self относится к классу Tren? И Это список всех вагонов поезда?
-
-
-  # Не смог проверить в irb -- set_route(route). Я не понял, что вводить в (route)
-  # список всех станций? Я пробовал разные варианты, получаю
-  # NoMethodError (undefined method `route' for nil:NilClass)
-
-  # В итоге без этого не проверил остальные функции.
-
   def current_station
-    @route.route[@route_index]
+    @route.route[@station_index]
   end
 
   def next_station
     return unless @route
-    @route.route[@route_index + 1]
+    @route.route[@station_index + 1]
   end
 
   def prev_station
     return unless @route
     return if @station_index < 1
-    @route.route[@route_index - 1]
+    @route.route[@station_index - 1]
   end
 
   def move_forward
-    if current_station == @route.route.last
-      puts "Вы на конечной станции"
-    else
-      current_station.remove_train(self)
-      route_index += 1
-      current_speed.add_train(self)
-    end
+    return unless @route && next_station
+    current_station.remove_train(self)
+    @station_index += 1
+    current_station.add_train(self)
   end
 
   def move_back
-    if current_station == @route.route.first
-      puts "Вы на начальной станции"
-    else
-      current_station.remove_train(self)
-      @route_index -= 1
-      current_station.add_train(self)
-    end
+    return unless @route && prev_station
+    current_station.remove_train(self)
+    @station_index -= 1
+    current_station.add_train(self)
   end
 
-  def add_car
+  def add_wagon
     return if moving?
-    cars += 1
+    @wagons += 1
   end
 
-  def remove_car
+  def remove_wagon
     return if moving?
-    cars -= 1
+    @wagons == 0 ? 0 : @wagons =- 1
   end
 
   def moving?
-    self.current_speed != 0
+    self.speed != 0
   end
 
   def speed_up(number)
-    @current_speed += number
+    @speed += number
   end
 
   def break(number)
-    @current_speed -= number if current_speed > 0
+    @speed -= number if speed > 0
   end
 
   def stop
-    @current_speed = 0
+    @speed = 0
   end
 end
+
+
+
