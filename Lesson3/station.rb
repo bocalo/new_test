@@ -8,11 +8,11 @@ class Station
   end
 
   def add_train(train)
-    self.trains << train
+    @trains << train
   end
 
   def remove_train(train)
-    self.trains.delete(train)
+    @trains.delete(train)
   end
 
   def type_trains(type)
@@ -21,24 +21,24 @@ class Station
 end
 
 class Route
-  attr_reader :first_station, :last_station, :inter_stations
+  attr_reader :first_station, :last_station, :inter
 
   def initialize(first_station, last_station)
     @first_station = first_station
     @last_station = last_station
-    @inter_stations = []
+    @inter = []
   end
 
-  def route
-    [@first_station, @inter_stations, @last_station].flatten.compact
+  def stations
+    [@first_station, @inter, @last_station].flatten.compact
   end
 
   def add_station(station)
-    self.inter_stations << station
+    @inter << station
   end
 
   def remove_station(station)
-    self.inter_stations.delete(station)
+    @inter.delete(station)
   end
 end
 
@@ -54,25 +54,25 @@ class Train
     @station_index = nil
   end
 
-  def set_route(r)
+  def set_route(route)
+    @route = route
     @station_index = 0
-    @route = r
     current_station.add_train(self)
   end
 
   def current_station
-    @route.route[@station_index]
+    @route.stations[@station_index]
   end
 
   def next_station
     return unless @route
-    @route.route[@station_index + 1]
+    @route.stations[@station_index + 1]
   end
 
   def prev_station
     return unless @route
     return if @station_index < 1
-    @route.route[@station_index - 1]
+    @route.stations[@station_index - 1]
   end
 
   def move_forward
